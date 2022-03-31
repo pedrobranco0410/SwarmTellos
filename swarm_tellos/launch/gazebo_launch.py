@@ -10,7 +10,7 @@ from launch.actions import ExecuteProcess
 
 def generate_launch_description():
     # 1 or more drones:
-    drones = ['drone1', 'drone2', 'drone3', 'drone4', 'drone5', 'drone6']
+    drones = ['drone1', 'drone2', 'drone3', 'drone4']#, 'drone5', 'drone6']
 
     # Starting locations:
     starting_locations = [

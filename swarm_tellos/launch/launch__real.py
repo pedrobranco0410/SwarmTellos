@@ -70,7 +70,7 @@ d6_params = [{
 def generate_launch_description():
     return LaunchDescription([
         # Rviz
-        #ExecuteProcess(cmd=['rviz2', '-d', 'install/flock2/share/swarm_tellos/rviz/one.rviz'], output='screen'),
+        ExecuteProcess(cmd=['rviz2', '-d', 'install/swarm_tellos/share/swarm_tellos/launch/rviz_config_swarm_tello.rviz'], output='screen'),
 
         # Drone Drivers
         Node(package='tello_driver', executable='tello_driver_main', output='screen', name='driver1', namespace=d1_name, parameters=d1_params),
@@ -89,7 +89,7 @@ def generate_launch_description():
 
 
         # Joystick
-        Node(package='swarm_tellos', executable='global_controller.py', output='screen',arguments= ["drone1"] ),
+        Node(package='swarm_tellos', executable='global_controller.py', output='screen',arguments= ['drone1', 'drone2', 'drone3', 'drone4']),
         #Node(package='joy', executable='joy_node', output='screen'),
 
 

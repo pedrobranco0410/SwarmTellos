@@ -20,9 +20,10 @@ class GlobalController(Node):
 
         #Global Controller variables
         self.mode = 0
-        self.base_position = [0,0,1.0,0]
+        self.base_position = [0,0,0.3,0]
         self.poly_angle = 0
         self.poly_angle_speed = 0.3
+        self.radius = 1.0
         self.in_position = False
 
         #Variables with information from the drones
@@ -138,8 +139,8 @@ class GlobalController(Node):
         #Calculating vertex positions in the polygon
         vertex = []
         for i in range(active_drones):
-            vertex += [[self.base_position[0] + math.cos(ang*i +self.poly_angle),
-                        self.base_position[1] + math.sin(ang*i +self.poly_angle),
+            vertex += [[self.base_position[0] + self.radius * math.cos(ang*i +self.poly_angle),
+                        self.base_position[1] + self.radius * math.sin(ang*i +self.poly_angle),
                         self.base_position[2]]]
 
         #Assigning a vertex to each drone in the system 
@@ -160,9 +161,9 @@ class GlobalController(Node):
         formation_xy = True
         formation_xyz = True
         for i in range(len(self.drones_state)):
-            if(self.drones_state[i] and math.dist(self.drones_target_positions[i][:-2],self.drones_positions[i][:-2]) > 0.05):
+            if(self.drones_state[i] and math.dist(self.drones_target_positions[i][:-2],self.drones_positions[i][:-2]) > 0.15):
                 formation_xy = False
-            if(self.drones_state[i] and math.dist(self.drones_target_positions[i][:-1],self.drones_positions[i][:-1]) > 0.05):
+            if(self.drones_state[i] and math.dist(self.drones_target_positions[i][:-1],self.drones_positions[i][:-1]) > 0.15):
                 formation_xyz = False
 
         #If all drones are in their target positions then the function has fulfilled its purpose
@@ -179,17 +180,17 @@ class GlobalController(Node):
         #If there are drones out of position we need to make sure there are no collisions.
         #To do this we will have each one move one layer along the z-axis
         layer = True
-        for i in range(6):
-            if(self.drones_state[i] and math.dist([self.drones_positions[i][2]], [self.base_position[2]+ i*0.15]) > 0.02):
+        for i in range(len(self.drones_state)):
+            if(self.drones_state[i] and math.dist([self.drones_positions[i][2]], [self.base_position[2]+ i*0.30]) > 0.15):
                 layer = False
                 break
         
         #If everyone is in the layer they can move around 
         for i in range(len(self.drones_state)):
             if(layer):
-                self.drones_target_positions[i][2] = self.base_position[2] + i*0.15
+                self.drones_target_positions[i][2] = self.base_position[2] + i*0.30
             else:
-                self.drones_target_positions[i] = [self.drones_positions[i][0],self.drones_positions[i][1],self.base_position[2] + i*0.15,0]
+                self.drones_target_positions[i] = [self.drones_positions[i][0],self.drones_positions[i][1],self.base_position[2] + i*0.30,0]
         
     def poly_control(self):
         
@@ -200,8 +201,8 @@ class GlobalController(Node):
         #Calculating vertex positions in the polygon
         vertex = []
         for i in range(active_drones):
-            vertex += [[self.base_position[0] + math.cos(ang*i +self.poly_angle),
-                        self.base_position[1] + math.sin(ang*i +self.poly_angle),
+            vertex += [[self.base_position[0] + self.radius * math.cos(ang*i +self.poly_angle),
+                        self.base_position[1] + self.radius * math.sin(ang*i +self.poly_angle),
                         self.base_position[2]]]
 
         #Assigning a vertex to each drone in the system 
@@ -221,7 +222,7 @@ class GlobalController(Node):
         #Checking if the drones have achieved their targets
         total = 0
         for i in range(len(self.drones_state)):
-             if(self.drones_state[i] and math.dist(self.drones_target_positions[i][:-1],self.drones_positions[i][:-1]) < 0.05):
+             if(self.drones_state[i] and math.dist(self.drones_target_positions[i][:-1],self.drones_positions[i][:-1]) < 0.15):
                  total += 1
         
         if(total == active_drones):
